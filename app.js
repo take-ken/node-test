@@ -126,5 +126,22 @@ app.post("/update", fileUpload(), function (req, res, next) {
     }
 });
 
+app.use(function (req, res, next) {
+    var err = new Error('Not Found');
+    err.status = 404;
+    return res.render('error', {
+        status: err.status,
+    });
+});
+
+app.use(function (err, req, res, next) {
+    log.error(err);
+    res.status(err.status || 500);
+    return res.render('error', {
+        message: err.message,
+        status: err.status || 500
+    });
+});
+
 var server = http.createServer(app);
 server.listen('3000');
